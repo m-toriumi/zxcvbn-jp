@@ -1,3 +1,9 @@
+// Type definitions for zxcvbn-jp 1.0
+// Project: https://github.com/m-toriumi/zxcvbn-jp#readme
+// Definitions by: Matt Traynham <https://github.com/mtraynham>
+//                 Muhun Kim <https://github.com/x86chi>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
 declare function zxcvbn(
   password: string,
   userInputs?: string[]
