@@ -4,7 +4,7 @@
   "description": "realistic password strength estimation for japanese",
   "license": "MIT",
   "main": "lib/main.js",
-  "repository": "m.toriumi/zxcvbn-jp",
+  "repository": "m-toriumi/zxcvbn-jp",
   "scripts": {
     "test": "coffeetape test/*.coffee | faucet",
     "test-saucelabs": "zuul -- test/*.coffee",
