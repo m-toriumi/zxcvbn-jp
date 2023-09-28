@@ -1,11 +1,10 @@
 {
-  "name": "zxcvbn",
-  "version": "4.4.2",
-  "description": "realistic password strength estimation",
-  "author": "Dan Wheeler",
+  "name": "zxcvbn-jp",
+  "version": "1.0.0",
+  "description": "realistic password strength estimation for japanese",
   "license": "MIT",
   "main": "lib/main.js",
-  "repository": "dropbox/zxcvbn",
+  "repository": "m.toriumi/zxcvbn-jp",
   "scripts": {
     "test": "coffeetape test/*.coffee | faucet",
     "test-saucelabs": "zuul -- test/*.coffee",
