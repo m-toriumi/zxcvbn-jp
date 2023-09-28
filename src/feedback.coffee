@@ -4,8 +4,8 @@ feedback =
   default_feedback:
     warning: ''
     suggestions: [
-      "Use a few words, avoid common phrases"
-      "No need for symbols, digits, or uppercase letters"
+      "数個の単語を組み合わせて、一般的なフレーズを避けてください。"
+      "記号、数字、大文字を必ずしも含む必要はありません。"
     ]
 
   get_feedback: (score, sequence) ->
@@ -22,7 +22,7 @@ feedback =
     for match in sequence[1..]
       longest_match = match if match.token.length > longest_match.token.length
     feedback = @get_match_feedback(longest_match, sequence.length == 1)
-    extra_feedback = 'Add another word or two. Uncommon words are better.'
+    extra_feedback = '簡単なフレーズを避けてください。'
     if feedback?
       feedback.suggestions.unshift extra_feedback
       feedback.warning = '' unless feedback.warning?
@@ -40,77 +40,77 @@ feedback =
       when 'spatial'
         layout = match.graph.toUpperCase()
         warning = if match.turns == 1
-          'Straight rows of keys are easy to guess'
+          'キーボード上の文字をqwertyのように直線的に使うのを避けてください。'
         else
-          'Short keyboard patterns are easy to guess'
+          'キーボード上で隣接する文字を繰り返すパターンは避けてください。'
         warning: warning
         suggestions: [
-          'Use a longer keyboard pattern with more turns'
+          'キーボードで文字を選ぶときは単純な直線や繰り返しを避け、より複雑な順番で文字を選んでください。'
         ]
 
       when 'repeat'
         warning = if match.base_token.length == 1
-          'Repeats like "aaa" are easy to guess'
+          '「aaa」のような繰り返しは推測しやすいです。'
         else
-          'Repeats like "abcabcabc" are only slightly harder to guess than "abc"'
+          '「abcabcabc」のような繰り返しは、「abc」よりもわずかに推測されにくいだけです。'
         warning: warning
         suggestions: [
-          'Avoid repeated words and characters'
+          '繰り返される単語や文字を避けてください。'
         ]
 
       when 'sequence'
-        warning: "Sequences like abc or 6543 are easy to guess"
+        warning: "「abc」や「6543」のような並びは簡単に推測されます。"
         suggestions: [
-          'Avoid sequences'
+          '連続する文字や数字を避けてください。'
         ]
 
       when 'regex'
         if match.regex_name == 'recent_year'
-          warning: "Recent years are easy to guess"
+          warning: "近代の西暦は推測されやすいです。"
           suggestions: [
-            'Avoid recent years'
-            'Avoid years that are associated with you'
+            '近代の西暦を避けてください。'
+            'あなたに関連する西暦を使用するのは避けてください。'
           ]
 
       when 'date'
-        warning: "Dates are often easy to guess"
+        warning: "日付は推測されやすいです。"
         suggestions: [
-          'Avoid dates and years that are associated with you'
+          'あなたに関連する日付を使用するのは避けてください。'
         ]
 
   get_dictionary_match_feedback: (match, is_sole_match) ->
     warning = if match.dictionary_name == 'passwords'
       if is_sole_match and not match.l33t and not match.reversed
         if match.rank <= 10
-          'This is a top-10 common password'
+          'これは最もよく使われるパスワードTOP10に含まれるパスワードです。'
         else if match.rank <= 100
-          'This is a top-100 common password'
+          'これは最もよく使われるパスワードTOP100に含まれるパスワードです。'
         else
-          'This is a very common password'
+          'これは非常によく使われるパスワードです。'
       else if match.guesses_log10 <= 4
-        'This is similar to a commonly used password'
+        'これはよく使われるパスワードに似ています。'
     else if match.dictionary_name == 'english_wikipedia'
       if is_sole_match
-        'A word by itself is easy to guess'
+        '単語のみは推測されやすいです。'
     else if match.dictionary_name in ['surnames', 'male_names', 'female_names']
       if is_sole_match
-        'Names and surnames by themselves are easy to guess'
+        '名前や名字単体は推測されやすいです'
       else
-        'Common names and surnames are easy to guess'
+        '一般的な名前と名字は推測されやすいです。'
     else
       ''
 
     suggestions = []
     word = match.token
     if word.match(scoring.START_UPPER)
-      suggestions.push "Capitalization doesn't help very much"
+      suggestions.push "先頭の文字を大文字にすることには意味はありません。"
     else if word.match(scoring.ALL_UPPER) and word.toLowerCase() != word
-      suggestions.push "All-uppercase is almost as easy to guess as all-lowercase"
+      suggestions.push "すべて大文字はすべて小文字と同じくらい推測されやすいです。"
 
     if match.reversed and match.token.length >= 4
-      suggestions.push "Reversed words aren't much harder to guess"
+      suggestions.push "逆さにした単語も推測されやすいです。"
     if match.l33t
-      suggestions.push "Predictable substitutions like '@' instead of 'a' don't help very much"
+      suggestions.push "予測可能な置換（例: 'a' の代わりに '@' 等）はあまり役立ちません"
 
     result =
       warning: warning
